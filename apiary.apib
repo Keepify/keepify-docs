@@ -1,80 +1,180 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://keepify-backend.herokuapp.com/
 
-# ctis-keepify
+# Keepify
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Backend services for Keepify.
 
-## Questions Collection [/questions]
+## User [/users]
 
-### List All Questions [GET]
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
+### Sign Up [POST /signup]
+ Creates a new user.
 + Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
+    + Attributes
+        + fname: `John` (string, required)
+            User's first name.
+        + lname: `Doe` (string, required)
+            User's last name.
+        + email: `ahmad@email.com` (string, required)
+            User's email
+        + password: `s3cur34nd1337` (string, required)
+            User's password.
+    
 + Response 201 (application/json)
+    + Attributes
+        + status (Response Status, required)
+        + user (User Info, required)
+        + auth_token (string, required)
 
-    + Headers
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
 
-            Location: /questions/2
+### Login [POST /login]
+ Login.
++ Request (application/json)
+    + Attributes
+        + email: `ahmad@email.com` (string, required)
+            User's email
+        + password: `s3cur34nd1337` (string, required)
+            User's password.
+    
++ Response 200 (application/json)
+    + Attributes
+        + status (Response Status, required)
+        + user (User Info, required)
+        + auth_token (string, required)
 
-    + Body
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
+
+### Get user info [GET /users?uid={uid}]
+ Gets the info of a user. If no ID provided, gets ID from token.
+
++ Parameter
+    + uid: `123e4567-e89b-12d3-a456-426655440000` (string, required)
+        ID of a user.
++ Request (application/json)
+    + Header
+        Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+            
++ Response 200 (application/json)
+    + Attributes
+        + user (User Info, required)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
+
+## Dropzone [/dropzones]
+
+### Query nearby dropzones [GET /dropzones?lat={lat}&lng={lng}]
+ Queries the nearby dropzones via lat/lng.
++ Request (application/json)
+    + Header
+        Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+    
++ Parameter
+    + lat: `39.945` (number, required)
+        User's current location's latitude.
+    + lng: `32.745` (number, required)
+        User's current location's longitude.
+        
++ Response 200 (application/json)
+    + Attributes
+        + status (Response Status, required)
+        + data (array, required)
+            + (Dropzone object)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
+
+### Get Dropzone by ID [GET /get-dropzone?id={id}]
+ Retrieves a single dropzone via its id.
++ Request (application/json)
+    + Header
+        Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+    
++ Parameter
+    + id: `123e4567-e89b-12d3-a456-426655440000` (number, required)
+        The ID of the dropzone to be retrieved.
+        
++ Response 200 (application/json)
+    + Attributes
+        + status (Response Status, required)
+        + data (Dropzone object, required)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
+
+# Data Structures
+
+## User Info (object)
++ id: `123e4567-e89b-12d3-a456-426655440000` (string, required)
++ fname: `Joe` (string, required)
++ lname: `Warosa` (string, required)
++ email: `email@email.com` (string, required)
++ password: `1337P@ssword` (string, required)
+
+## Dropzone object (object)
++ id: `123e4567-e89b-12d3-a456-426655440000` (string, required)
+    ID.
++ name: `Dropzone 1` (string, required)
+    Name.
++ thumbnail: `somelink.com/image.png` (string, required)
+    thumbnail.
++ type: `Warehouse` (string, required)
+    type.
++ services: `storing`, `shipping` (array, required)
+    services.
+    + (string)
++ rating: `3.8` (number, required)
+    rating.
++ unit: `$` (string, required)
+    unit.
++ rate: `5.5` (number, required)
+    rate.
++ location: (object, required)
+    + lat: `40.23` (number, required)
+        Latitude of the dropzone location.
+    + lng: `123.45` (number, required)
+        Longitude of the dropzone location.
++ host: (User Info, required)
+    The host of the dropzone
+
+## Response Status (enum[string])
++ success
++ failure
+
+## Failure Response (object)
++ status (Response Status, required)
++ error: Error message (string, required)
