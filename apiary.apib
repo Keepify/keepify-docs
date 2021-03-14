@@ -5,7 +5,7 @@ HOST: https://keepify-backend.herokuapp.com/
 
 Backend services for Keepify.
 
-## User [/users]
+## Authentication [/]
 
 ### Sign Up [POST /signup]
  Creates a new user.
@@ -19,6 +19,8 @@ Backend services for Keepify.
             User's email
         + password: `s3cur34nd1337` (string, required)
             User's password.
+        + image_url: `/media/uploads/f2d57c07-363d-4a14-8ef9-615daf22ba60.png` (string)
+
     
 + Response 201 (application/json)
     + Attributes
@@ -59,6 +61,54 @@ Backend services for Keepify.
 + Response 500 (application/json)
     + Attributes (Failure Response)
 
+
+## User [users/]
+
+### Get current user info [GET /users/me]
+ Gets the info of the current authenticated user.
+
++ Request (application/json)
+    + Header
+        Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTU3MjI2NzcsImlhdCI6MTYxNTYzNjI3Nywic3ViIjoiMGM3Yzc2YmUtMjE4ZC00YWJiLTg3MWMtZjBiMmFjNmUyMmNlIn0.ek2ZabUJKhtZZY1gWZ_Vb2uadO-hzkHSzjmKXfzW8Ms
+            
++ Response 200 (application/json)
+    + Attributes
+        + me (User Info, required)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
+    
+### Update current user info [PUT /users/me]
+ Update info of the current authenticated user.
+
++ Request (application/json)
+    + Header
+        Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTU3MjI2NzcsImlhdCI6MTYxNTYzNjI3Nywic3ViIjoiMGM3Yzc2YmUtMjE4ZC00YWJiLTg3MWMtZjBiMmFjNmUyMmNlIn0.ek2ZabUJKhtZZY1gWZ_Vb2uadO-hzkHSzjmKXfzW8Ms
+    + Attributes
+        + fname: `John` (string, required)
+            User's first name.
+        + lname: `Doe` (string, required)
+            User's last name.
+        + email: `ahmad@email.com` (string, required)
+            User's email
++ Response 200 (application/json)
+    + Attributes
+        + me (User Info, required)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
 
 ### Get user info [GET /users?uid={uid}]
  Gets the info of a user. If no ID provided, gets ID from token.
@@ -136,6 +186,58 @@ Backend services for Keepify.
 + Response 500 (application/json)
     + Attributes (Failure Response)
 
+
+## Media [/media]
+
+### Upload image [POST /media/image]
+ Upload an image
+
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="image[file]"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ Response 201 (application/json)
+    + Attributes
+        + location: `url` (string, required)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
+ 
+
+### Get image [GET /uploads?{name}]
+ Get the uploaded image
+    
++ Parameter
+    + name: `123e4567-e89b-12d3-a456-426655440000` (number, required)
+        The name of the image to be retrieved.
+        
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
+    
 # Data Structures
 
 ## User Info (object)
@@ -143,7 +245,8 @@ Backend services for Keepify.
 + fname: `Joe` (string, required)
 + lname: `Warosa` (string, required)
 + email: `email@email.com` (string, required)
-+ password: `1337P@ssword` (string, required)
++ role: `0` (string, required)
++ image_url: `"/media/uploads/f2d57c07-363d-4a14-8ef9-615daf22ba60.png"` (string)
 
 ## Dropzone object (object)
 + id: `123e4567-e89b-12d3-a456-426655440000` (string, required)
