@@ -110,8 +110,8 @@ Backend services for Keepify.
 + Response 500 (application/json)
     + Attributes (Failure Response)
 
-### Get user info [GET /users?uid={uid}]
- Gets the info of a user. If no ID provided, gets ID from token.
+### Get user info [GET /users/{uid}]
+ Gets the info of a user.
 
 + Parameter
     + uid: `123e4567-e89b-12d3-a456-426655440000` (string, required)
@@ -123,6 +123,31 @@ Backend services for Keepify.
 + Response 200 (application/json)
     + Attributes
         + user (User Info, required)
+
++ Response 400 (application/json)
+    + Attributes (Failure Response)
++ Response 401 (application/json)
+    + Attributes (Failure Response)
++ Response 404 (application/json)
+    + Attributes (Failure Response)
++ Response 500 (application/json)
+    + Attributes (Failure Response)
+    
+### Get user dropzones [GET /users/{uid}/dropzones]
+ Gets the dropzones of a host user.
+
++ Parameter
+    + uid: `123e4567-e89b-12d3-a456-426655440000` (string, required)
+        ID of a user.
++ Request (application/json)
+    + Header
+        Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+            
++ Response 200 (application/json)
+    + Attributes
+        + status (Response Status, required)
+        + data (array, required)
+            + (Dropzone object)
 
 + Response 400 (application/json)
     + Attributes (Failure Response)
@@ -188,7 +213,7 @@ Backend services for Keepify.
 
 ## Transaction [/transactions]
 
-### Query single Transaction [GET /transactions?uuid={uuid}]
+### Query single Transaction [GET /transactions/{uuid}]
  Query single Transaction using provided id
 + Request (application/json)
     + Header
@@ -209,16 +234,16 @@ Backend services for Keepify.
     + Attributes (Failure Response)
 
 
-### Query multiple Transactions [GET /transactions?status={status}&before={before}&after={after}]
+### Query multiple Transactions [GET /transactions/?status={status}&before={before}&after={after}]
  Query multiple Transactions with filters like status, and before and after specific data ranges
 + Request (application/json)
     + Header
         Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
     
 + Parameter
-    + status: `COMPLETED` (string, required)
-    + before: `11:00:59 20/11/2021 0800` (required)  
-    + after: `11:00:59 20/11/2021 0800` (required)
+    + status: `COMPLETED` (string)
+    + before: `1988-01-17 23:59:59` 
+    + after: `1988-01-17 23:59:59` 
         
 + Response 200 (application/json)
     + Attributes
@@ -232,17 +257,17 @@ Backend services for Keepify.
     + Attributes (Failure Response)
     
 
-### Create a Transaction [POST /transactions]
+### Create a Transaction [POST /transactions/]
  Create a Transaction
 + Request (application/json)
     + Header
         Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
     + Attributes
-        + host_token: `123e4567-e89b-12d3-a456-426655440000` (string, required)
+        + host_token: `123` (string, required)
             Vertification token for the host
         + dropzone_id: `123e4567-e89b-12d3-a456-426655440000` (string, required)
-        + reservation_start: `11:00:59 20/11/2021 0800` (required) 
-        + reservation_end: `11:00:59 20/11/2021 0800` (required) 
+        + reservation_start: `1988-01-17 23:59:59`  (required) 
+        + reservation_end: `1988-01-17 23:59:59`  (required) 
         + status: `CREATED` (string, required) 
         + cost: 5 (number, required) 
     
@@ -350,12 +375,13 @@ Backend services for Keepify.
 + id: `123e4567-e89b-12d3-a456-426655440000` (string, required)
 + user: (User Info, required)
 + dropzone: (Dropzone object, required)
-+ creation_time: `11:00:59 20/11/2021 0800` (required)
-+ reservation_start: `11:00:59 20/11/2021 0800` (required)
-+ reservation_end: `11:00:59 20/11/2021 0800` (required)
++ creation_time: `1988-01-17 23:59:59`  (required)
++ reservation_start: `1988-01-17 23:59:59`  (required)
++ reservation_end: `1988-01-17 23:59:59`  (required)
 + status: `COMPLETED` (string, required)
 + cost: 25 (number, required)
 + host_token: `24asd21-asda-12dssds-23` (string, required)
++ client_note: `nice host` (string, optional)
 
 ## Response Status (enum[string])
 + success
